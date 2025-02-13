@@ -1,0 +1,9 @@
+node_modules
+dist
+yarn.lock
+package.json.lock
+.data
+.vscode
+.idea
+.DS_Store
+*.md
