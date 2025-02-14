@@ -12,9 +12,7 @@ const request = axios.create({
 // 添加请求拦截器
 request.interceptors.request.use(
   async (config) => {
-    const token = (await getUser())?.token;
-    console.log(token, 'token');
-    
+    const token = (await getUser())?.token;    
     config.headers["X-Device-No"] = device.deviceNo;
     config.headers["X-Device-Name"] = device.deviceName;
     config.headers["X-Device-Model"] = device.deviceModel;

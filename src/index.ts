@@ -6,6 +6,7 @@ import { jsonParse, jsonStringify } from "./utils/json";
 import { EventEmitter } from "events";
 import * as wfc from "@vv/node-wfc";
 import { continueConversation } from "./utils/ai";
+import * as dayjs from "dayjs";
 
 wfc.setAppName("vv-chat");
 
@@ -110,12 +111,11 @@ const start = async () => {
 start();
 
 async function onMessage(e: any) {
-  console.log(wfc.getConnectionStatus(), "wfc.getConnectionStatus()");
-
   try {
     if (wfc.getConnectionStatus() !== 1) {
       return;
     }
+    clearInterval(timer);
     const data = jsonParse(e)?.[0];
     const currentUser = await getUser();
     if (
@@ -126,13 +126,9 @@ async function onMessage(e: any) {
       return;
     }
 
-    const isAt = data.content?.searchableContent?.includes("@DeepSeek");
-    const result = await continueConversation(
-      data.content?.searchableContent?.replace("@DeepSeek ", "")
-    );
-    const msg = jsonStringify({
+    const msg = {
       type: 1,
-      searchableContent: result,
+      searchableContent:'',
       pushContent: "",
       content: "",
       binaryContent: "",
@@ -142,11 +138,24 @@ async function onMessage(e: any) {
       localMediaPath: "",
       mentionedType: 0,
       mentionedTargets: [],
-    });
+    }
 
+    const isAt = data.content?.searchableContent?.includes("@DeepSeek");
+    if(data.content?.searchableContent==='打卡'){
+      msg.searchableContent = `您已打卡成功，打卡时间：${new Date().toLocaleString()}，打卡地点：百环大厦，打卡备注：无`;
+    }else{
+      const result = await continueConversation(
+        data.content?.searchableContent?.replace("@DeepSeek ", "")
+      );
+      msg.searchableContent = result;
+    }
+
+
+    
+   
     wfc.sendMessage(
       jsonStringify(data.conversation),
-      msg,
+      jsonStringify(msg),
       [],
       0,
       (e) => {

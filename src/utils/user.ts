@@ -13,16 +13,14 @@ export const guidV4 = () => {
   });
 };
 
-const userFile = "./.data/user.json";
+const userFile = path.join(__dirname,"../../.data/user.json");
 // let user;
 export const getUser = async () => {
   try {
-    console.log(__dirname, userFile, "__dirname");
-
     const userString = await fs.readFileSync(userFile, "utf-8");
     return JSON.parse(userString);
   } catch (error) {
-    console.error("无法读取用户信息: ", error);
+    // console.error("无法读取用户信息: ", error);
     return null;
   }
 };

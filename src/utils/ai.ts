@@ -12,12 +12,7 @@ request.interceptors.request.use((config) => {
   return config;
 });
 
-const messages: any = [
-  {
-    role: "system",
-    content: "你是威震天，你是一个狂暴的机器人，以狂妄的语气回答问题。",
-  },
-];
+const messages: any = [];
 
 export async function continueConversation(content: string) {
   messages.push({ role: "user", content });
@@ -37,9 +32,7 @@ export async function continueConversation(content: string) {
 
     const lastContent = res.data?.choices[0].message?.content;
     console.log(lastContent, "lastMessage");
-
-    messages.push({ role: "assistant", content: lastContent });
-
+    // messages.push({ role: "assistant", content: lastContent });
     return lastContent;
   } catch (error) {
     console.log(error, "error");
